@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 const readlineSync = require('readline-sync');
 const crypto = require('crypto');
+const chalk = require('chalk');
 
 const talk = (data) => {
     console.clear();
@@ -56,8 +57,16 @@ function encrypting(index) {
         let word=readlineSync.question('=> ');
         talk('key를 입력해주세요.(32자)');
         let key=readlineSync.question('=> ');
+        while(key.length!=32){
+            talk(chalk.red('32자를 맞추지 않는다면 타격을 가하겠습니다.'));
+            key=readlineSync.question('=> ');
+        }
         talk('IV를 입력해주세요.(16자)');
         let iv=readlineSync.question('=> ');
+        while(iv.length!=16){
+            talk(chalk.red('16자를 맞추지 않는다면 타격을 가하겠습니다.'));
+            iv=readlineSync.question('=> ');
+        }
         const cipher = crypto.createCipheriv('aes-256-cbc', key, iv);
         let result = cipher.update(word, 'utf8', 'base64')
         + cipher.final('base64');
@@ -65,11 +74,20 @@ function encrypting(index) {
     }
     else if(index==1){
         talk('복호화할 평문을 적어주세요.');
-        let word=readlineSync.question('=> ');
+        let word=readlineSync.question('=> ', () => {
+        });
         talk('key를 입력해주세요.(32자)');
         let key=readlineSync.question('=> ');
+        while(key.length!=32){
+            talk(chalk.red('32자를 맞추지 않는다면 타격을 가하겠습니다.'));
+            key=readlineSync.question('=> ');
+        }
         talk('IV를 입력해주세요.(16자)');
         let iv=readlineSync.question('=> ');
+        while(iv.length!=16){
+            talk(chalk.red('16자를 맞추지 않는다면 타격을 가하겠습니다.'));
+            iv=readlineSync.question('=> ');
+        }
         const decipher = crypto.createDecipheriv(algorithm, key, iv);
         let result = decipher.update(word, 'base64', 'utf8')
         + decipher.final('utf8');
